@@ -1,59 +1,51 @@
 pipeline {
-agent any  // Runs on any available agent
+    agent any
 
-```
-tools {
-    // Optional: define any tools if installed (e.g., JDK)
-    // jdk 'JDK11'
-}
+    tools {
+    }
 
-environment {
-    // Optional: add any environment variables
-    // EXAMPLE_VAR = "value"
-}
+    environment {
+    }
 
-stages {
-    stage('Checkout SCM') {
-        steps {
-            // Checkout your Git repository
-            git branch: 'main', url: 'https://github.com/jeanpierrenisingizwe/Jenkins.git'
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                git branch: 'main', url: 'https://github.com/jeanpierrenisingizwe/Jenkins.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                bat 'dir'
+                bat 'dotnet build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                bat 'dotnet test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                bat 'xcopy /Y /E build\\* D:\\Deploy\\'
+            }
         }
     }
 
-    stage('Build') {
-        steps {
-            echo 'Building the project...'
-            bat 'dir'  // Example Windows command
-            // Add your actual build commands here, e.g.:
-            // bat 'msbuild MyProject.sln'
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+        always {
+            echo 'Cleaning up workspace...'
         }
     }
-
-    stage('Test') {
-        steps {
-            echo 'Running tests...'
-            // Add your test commands here, e.g.:
-            // bat 'vstest.console.exe MyTests.dll'
-        }
-    }
-
-    stage('Deploy') {
-        steps {
-            echo 'Deploying...'
-            // Add your deployment commands here, e.g.:
-            // bat 'copy /Y build\\output\\* D:\\Deploy\\'
-        }
-    }
-}
-
-post {
-    success {
-        echo 'Pipeline completed successfully!'
-    }
-    failure {
-        echo 'Pipeline failed.'
-    }
-}
-```
-
 }
