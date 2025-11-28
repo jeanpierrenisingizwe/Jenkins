@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-    }
-
-    environment {
-    }
-
     stages {
         stage('Checkout SCM') {
             steps {
